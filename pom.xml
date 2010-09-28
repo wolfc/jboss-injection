@@ -40,7 +40,6 @@
       <version.jboss.logging>2.2.0.CR1</version.jboss.logging>
       <version.jboss.naming>5.0.1.GA</version.jboss.naming>
       <version.jboss.bootstrap>2.1.0-alpha-4</version.jboss.bootstrap>
-      <version.jboss.common.core>2.2.17.GA</version.jboss.common.core>
       <version.jboss.test>1.0.5.GA</version.jboss.test>
    </properties>
 
@@ -63,6 +62,12 @@
             <artifactId>junit</artifactId>
             <version>4.8.1</version>
             <scope>test</scope>
+         </dependency>
+
+         <dependency>
+            <groupId>org.jboss</groupId>
+            <artifactId>jboss-common-core</artifactId>
+            <version>2.2.17.GA</version>
          </dependency>
       </dependencies>
    </dependencyManagement>
