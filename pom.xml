@@ -32,14 +32,16 @@
 
    <!-- Dependency Versions -->
    <properties>
+      <version.jboss.bootstrap>2.1.0-alpha-4</version.jboss.bootstrap>
       <version.jboss.classloading>2.2.0.Alpha3</version.jboss.classloading>
+      <version.jboss.common.core>2.2.17.GA</version.jboss.common.core>
       <version.jboss.deployers>2.2.0.Alpha3</version.jboss.deployers>
       <version.jboss.kernel>2.2.0.Alpha3</version.jboss.kernel>
-      <version.jboss.metadata.common>2.0.0.Alpha14</version.jboss.metadata.common>
-      <version.jboss.mdr>2.2.0.Alpha2</version.jboss.mdr>
       <version.jboss.logging>2.2.0.CR1</version.jboss.logging>
+      <version.jboss.mdr>2.2.0.Alpha2</version.jboss.mdr>
+      <version.jboss.metadata.common>2.0.0.Alpha14</version.jboss.metadata.common>
       <version.jboss.naming>5.0.1.GA</version.jboss.naming>
-      <version.jboss.bootstrap>2.1.0-alpha-4</version.jboss.bootstrap>
+      <version.jboss.reloaded.naming>0.2.0</version.jboss.reloaded.naming>
       <version.jboss.test>1.0.5.GA</version.jboss.test>
    </properties>
 
@@ -68,6 +70,20 @@
             <groupId>org.jboss</groupId>
             <artifactId>jboss-common-core</artifactId>
             <version>2.2.17.GA</version>
+         </dependency>
+
+         <dependency>
+            <groupId>org.jboss.reloaded.naming</groupId>
+            <artifactId>jboss-reloaded-naming-impl</artifactId>
+            <version>${version.jboss.reloaded.naming}</version>
+            <scope>test</scope>
+         </dependency>
+
+         <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>1.8.4</version>
+            <scope>test</scope>
          </dependency>
       </dependencies>
    </dependencyManagement>

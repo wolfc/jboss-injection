@@ -39,6 +39,12 @@ public class Injector
    private Context context;
    private JndiEnvironmentRefsGroup environment;
 
+   public Injector(Context context, JndiEnvironmentRefsGroup environment)
+   {
+      this.context = context;
+      this.environment = environment;
+   }
+
    /**
     * @return the context from which injection takes place
     */
