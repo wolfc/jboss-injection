@@ -34,10 +34,31 @@
          <groupId>org.jboss</groupId>
          <artifactId>jboss-common-core</artifactId>
       </dependency>
+
+      <dependency>
+         <groupId>org.jboss.ejb3</groupId>
+         <artifactId>jboss-ejb3-sis</artifactId>
+         <version>0.1.0-SNAPSHOT</version>
+         <scope>test</scope>
+      </dependency>
       
       <dependency>
          <groupId>org.jboss.reloaded.naming</groupId>
          <artifactId>jboss-reloaded-naming-impl</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>org.jboss.spec.javax.ejb</groupId>
+         <artifactId>jboss-ejb-api_3.1_spec</artifactId>
+         <version>1.0.0.CR2</version>
+         <scope>test</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>org.jboss.spec.javax.interceptor</groupId>
+         <artifactId>jboss-interceptors-api_1.1_spec</artifactId>
+         <version>1.0.0.Beta1</version>
+         <scope>test</scope>
       </dependency>
    </dependencies>
 </project>
