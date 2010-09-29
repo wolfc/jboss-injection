@@ -93,7 +93,7 @@ public class Injector
                {
                   if(value == null)
                      value = getContext().lookup(name);
-                  inject(value, cls, instance, target.getInjectionTargetName());
+                  inject(value, target.getInjectionTargetClass(), instance, target.getInjectionTargetName());
                }
             }
          }
