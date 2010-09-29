@@ -41,6 +41,8 @@ public interface EnvironmentEntryType
     * The dependency that must be satisfied before a lookup on
     * java:comp/env/<name> can actually succeed.
     *
+    * Note: JBoss specific
+    *
     * @return the dependency
     */
    Object getDependency();
