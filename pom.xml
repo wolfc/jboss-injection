@@ -28,6 +28,7 @@
       <module>resolver-impl</module>
       <module>switchboard-metadata</module>
       <module>switchboard-deployer</module>
+      <module>injection-manager</module>
    </modules>
 
    <!-- Dependency Versions -->
@@ -78,6 +79,12 @@
             <version>${version.jboss.reloaded.naming}</version>
             <scope>test</scope>
          </dependency>
+
+         <dependency>
+             <groupId>org.jboss.injection</groupId>
+             <artifactId>jboss-injection-manager</artifactId>
+            <version>${project.version}</version>
+          </dependency>
 
          <dependency>
             <groupId>org.mockito</groupId>

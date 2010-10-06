@@ -21,7 +21,7 @@
  */
 package org.jboss.injection.injector.test.coverage;
 
-import org.jboss.injection.injector.Injector;
+import org.jboss.injection.injector.EEInjector;
 import org.jboss.injection.injector.metadata.EnvironmentEntryType;
 import org.jboss.injection.injector.metadata.InjectionTargetType;
 import org.jboss.injection.injector.metadata.JndiEnvironmentRefsGroup;
@@ -96,7 +96,7 @@ public class CoverageTestCase
       Collection<EnvironmentEntryType> entries = asList(entry);
       when(environment.getEntries()).thenReturn(entries);
 
-      Injector injector = new Injector(context, environment);
+      EEInjector injector = new EEInjector(context, environment);
 
       GreeterBean instance = new GreeterBean();
 

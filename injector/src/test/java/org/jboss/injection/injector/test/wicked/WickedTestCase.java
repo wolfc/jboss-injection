@@ -24,11 +24,14 @@ package org.jboss.injection.injector.test.wicked;
 import org.jboss.ejb3.sis.Interceptor;
 import org.jboss.ejb3.sis.InterceptorAssembly;
 import org.jboss.ejb3.sis.reflect.InterceptorInvocationHandler;
-import org.jboss.injection.injector.Injector;
+import org.jboss.injection.injector.EEInjector;
 import org.jboss.injection.injector.metadata.EnvironmentEntryType;
 import org.jboss.injection.injector.metadata.InjectionTargetType;
 import org.jboss.injection.injector.metadata.JndiEnvironmentRefsGroup;
 import org.jboss.injection.injector.test.common.ObjectInvocationHandler;
+import org.jboss.injection.manager.core.DefaultInjectionManager;
+import org.jboss.injection.manager.spi.InjectionManager;
+import org.jboss.injection.manager.spi.Injector;
 import org.jboss.util.naming.Util;
 import org.jnp.server.SingletonNamingServer;
 import org.junit.AfterClass;
@@ -113,12 +116,14 @@ public class WickedTestCase
       Collection<EnvironmentEntryType> entries = asList(entry, entry2);
       when(environment.getEntries()).thenReturn(entries);
 
-      Injector injector = new Injector(context, environment);
+      Injector injector = new EEInjector(context, environment);
 
+      InjectionManager injectionManager = new DefaultInjectionManager();
+      injectionManager.addInjector(injector);
       ValueStatelessBean bean = new ValueStatelessBean();
-      injector.inject(bean);
+      injectionManager.inject(bean);
       MyInterceptor interceptor = new MyInterceptor();
-      injector.inject(interceptor);
+      injectionManager.inject(interceptor);
 
       // the bean has a bean method interceptor
       InterceptorInvocationHandler handler = new InterceptorInvocationHandler(new ObjectInvocationHandler(bean), interceptors(interceptor, bean));

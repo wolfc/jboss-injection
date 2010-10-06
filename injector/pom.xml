@@ -60,5 +60,10 @@
          <version>1.0.0.Beta1</version>
          <scope>test</scope>
       </dependency>
+
+      <dependency>
+         <groupId>org.jboss.injection</groupId>
+         <artifactId>jboss-injection-manager</artifactId>
+      </dependency>
    </dependencies>
 </project>

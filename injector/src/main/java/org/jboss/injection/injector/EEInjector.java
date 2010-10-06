@@ -27,6 +27,9 @@ import org.jboss.injection.injector.metadata.JndiEnvironmentRefsGroup;
 import org.jboss.injection.injector.util.InjectionPoint;
 import org.jboss.injection.injector.util.InjectionPointFactory;
 import org.jboss.injection.injector.util.NoSuchPropertyException;
+import org.jboss.injection.manager.spi.InjectionContext;
+import org.jboss.injection.manager.spi.InjectionException;
+import org.jboss.injection.manager.spi.Injector;
 
 import javax.naming.Context;
 import javax.naming.NamingException;
@@ -34,12 +37,12 @@ import javax.naming.NamingException;
 /**
  * @author <a href="mailto:cdewolf@redhat.com">Carlo de Wolf</a>
  */
-public class Injector
+public class EEInjector implements Injector
 {
    private Context context;
    private JndiEnvironmentRefsGroup environment;
 
-   public Injector(Context context, JndiEnvironmentRefsGroup environment)
+   public EEInjector(Context context, JndiEnvironmentRefsGroup environment)
    {
       this.context = context;
       this.environment = environment;
@@ -56,6 +59,19 @@ public class Injector
    protected JndiEnvironmentRefsGroup getEnvironment()
    {
       return environment;
+   }
+
+   public <T> void  inject(InjectionContext<T> injectionContext)
+   {
+      try
+      {
+         this.inject(injectionContext.getInjectedType(), injectionContext.getInjectionTarget());
+         injectionContext.proceed();
+      }
+      catch (NamingException e)
+      {
+         throw new InjectionException(e);
+      }
    }
 
    /**
@@ -78,7 +94,7 @@ public class Injector
     * @param cls the class to which the resources belong
     * @param instance the instance to inject
     */
-   public void inject(Class<?> cls, Object instance) throws NamingException
+   private void inject(Class<?> cls, Object instance) throws NamingException
    {
       // TODO: optimize for speed
       try
