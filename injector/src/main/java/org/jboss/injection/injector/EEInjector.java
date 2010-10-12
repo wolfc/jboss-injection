@@ -35,6 +35,11 @@ import javax.naming.Context;
 import javax.naming.NamingException;
 
 /**
+ * Inject entries from the naming environment into the application component,
+ * as specified by the environment parameter.
+ *
+ * Java EE 6 EE.5.3.4 bullet 4
+ * 
  * @author <a href="mailto:cdewolf@redhat.com">Carlo de Wolf</a>
  */
 public class EEInjector implements Injector
@@ -43,6 +48,10 @@ public class EEInjector implements Injector
    private JndiEnvironmentRefsGroup environment;
 
    public EEInjector(Context context, JndiEnvironmentRefsGroup environment)
+   /**
+    * @param context the naming environment of an application component
+    * @param environment the representation of the application component descriptor and annotations
+    */
    {
       this.context = context;
       this.environment = environment;
@@ -78,6 +87,10 @@ public class EEInjector implements Injector
     * Inject the given instance using the resources targeted at the
     * instances class.
     *
+    * Before calling this method the associated context must have the
+    * environment entries specified. The entries must be ready to be
+    * looked up.
+    *
     * @param instance the instance to inject
     */
    public void inject(Object instance) throws NamingException
@@ -90,6 +103,10 @@ public class EEInjector implements Injector
     * given class.
     *
     * The instance must be an instance of the given class.
+    *
+    * Before calling this method the associated context must have the
+    * environment entries specified. The entries must be ready to be
+    * looked up.
     *
     * @param cls the class to which the resources belong
     * @param instance the instance to inject
