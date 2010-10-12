@@ -23,6 +23,7 @@
 package com.jboss.injection.manager;
 
 import org.jboss.injection.manager.core.DefaultInjectionManager;
+import org.jboss.injection.manager.spi.InjectionException;
 import org.jboss.injection.manager.spi.InjectionManager;
 import org.junit.Assert;
 import org.junit.Test;
@@ -51,4 +52,62 @@ public class InjectionManagerTest
       Assert.assertEquals(1, DummyInjector1.invocationCount);
       Assert.assertEquals(1, DummyInjector2.invocationCount);
    }
+
+   @Test
+   public void tryRecoverableInjectors()
+   {
+      InjectionManager injectionManager = new DefaultInjectionManager();
+
+      DummyInjector1 injector1 = new DummyInjector1();
+      DummyInjector2 injector2 = new DummyInjector2();
+      RetryInjector retryInjector = new RetryInjector(3);
+      FailingRecoverableInjector failingRecoverableInjector = new FailingRecoverableInjector(2);
+
+      DummyInjector1.invocationCount = 0;
+      DummyInjector2.invocationCount = 0;
+
+      injectionManager.addInjector(retryInjector);
+      injectionManager.addInjector(injector1);
+      injectionManager.addInjector(injector2);
+      injectionManager.addInjector(failingRecoverableInjector);
+
+      DummyType dummyInstance = new DummyType();
+
+      injectionManager.inject(dummyInstance, DummyType.class);
+
+      Assert.assertEquals(3, DummyInjector1.invocationCount);
+      Assert.assertEquals(3, DummyInjector2.invocationCount);
+      Assert.assertEquals(2, retryInjector.getInvocationCount());
+      Assert.assertEquals(3, failingRecoverableInjector.getTries());
+
+    }
+
+   @Test(expected = InjectionException.class)
+   public void tryInjectorDoesNotRecover()
+   {
+      InjectionManager injectionManager = new DefaultInjectionManager();
+
+      DummyInjector1 injector1 = new DummyInjector1();
+      DummyInjector2 injector2 = new DummyInjector2();
+      RetryInjector retryInjector = new RetryInjector(3);
+      FailingRecoverableInjector failingRecoverableInjector = new FailingRecoverableInjector(4);
+
+      DummyInjector1.invocationCount = 0;
+      DummyInjector2.invocationCount = 0;
+
+      injectionManager.addInjector(retryInjector);
+      injectionManager.addInjector(injector1);
+      injectionManager.addInjector(injector2);
+      injectionManager.addInjector(failingRecoverableInjector);
+
+      DummyType dummyInstance = new DummyType();
+
+      injectionManager.inject(dummyInstance, DummyType.class);
+
+      Assert.assertEquals(3, DummyInjector1.invocationCount);
+      Assert.assertEquals(3, DummyInjector2.invocationCount);
+      Assert.assertEquals(2, retryInjector.getInvocationCount());
+      Assert.assertEquals(3, failingRecoverableInjector.getTries());
+
+    }
 }

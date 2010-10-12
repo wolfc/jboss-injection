@@ -20,57 +20,19 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.injection.manager.core;
+package com.jboss.injection.manager;
 
 import org.jboss.injection.manager.spi.InjectionContext;
 import org.jboss.injection.manager.spi.InjectionException;
 import org.jboss.injection.manager.spi.Injector;
 
-import java.util.LinkedList;
-import java.util.List;
-
 /**
-* @author Marius Bogoevici
-*/
-public class DefaultInjectionContext<T> implements InjectionContext<T>
+ * @author Marius Bogoevici
+ */
+public class ForeverFailingInjector implements Injector
 {
-   List<Injector> injectors;
-   private final T instance;
-   private Class<? super T> clazz;
-   private int currentPosition;
-
-   public DefaultInjectionContext(T instance, Class<? super T> clazz, List<Injector> injectors)
+   public <T> void inject(InjectionContext<T> injectionContext) throws InjectionException
    {
-      this.instance = instance;
-      this.clazz = clazz;
-      this.injectors = new LinkedList<Injector>(injectors);
-      this.currentPosition = 0;
-   }
-
-
-
-   public void proceed() throws InjectionException
-   {
-      if(currentPosition < injectors.size())
-      {
-         try
-         {
-            injectors.get(currentPosition++).inject(this);
-         }
-         finally
-         {
-            currentPosition --;
-         }
-      }
-   }
-
-   public T getInjectionTarget()
-   {
-      return instance;
-   }
-
-   public Class<? super T> getInjectedType()
-   {
-      return clazz;
+      throw new InjectionException("Doesn't work");
    }
 }

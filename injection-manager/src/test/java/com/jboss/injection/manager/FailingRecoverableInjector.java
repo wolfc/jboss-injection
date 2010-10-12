@@ -20,57 +20,44 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.injection.manager.core;
+package com.jboss.injection.manager;
 
 import org.jboss.injection.manager.spi.InjectionContext;
 import org.jboss.injection.manager.spi.InjectionException;
 import org.jboss.injection.manager.spi.Injector;
 
-import java.util.LinkedList;
-import java.util.List;
-
 /**
-* @author Marius Bogoevici
-*/
-public class DefaultInjectionContext<T> implements InjectionContext<T>
+ * @author Marius Bogoevici
+ */
+public class FailingRecoverableInjector implements Injector
 {
-   List<Injector> injectors;
-   private final T instance;
-   private Class<? super T> clazz;
-   private int currentPosition;
+   private int triesBeforeRecovery;
 
-   public DefaultInjectionContext(T instance, Class<? super T> clazz, List<Injector> injectors)
+   private int tries;
+
+   public FailingRecoverableInjector(int triesBeforeRecovery)
    {
-      this.instance = instance;
-      this.clazz = clazz;
-      this.injectors = new LinkedList<Injector>(injectors);
-      this.currentPosition = 0;
+      this.triesBeforeRecovery = triesBeforeRecovery;
+      this.tries = 0;
    }
 
-
-
-   public void proceed() throws InjectionException
+   public int getTriesBeforeRecovery()
    {
-      if(currentPosition < injectors.size())
+      return triesBeforeRecovery;
+   }
+
+   public int getTries()
+   {
+      return tries;
+   }
+
+   public <T> void inject(InjectionContext<T> injectionContext) throws InjectionException
+   {
+      if (tries++ < triesBeforeRecovery)
       {
-         try
-         {
-            injectors.get(currentPosition++).inject(this);
-         }
-         finally
-         {
-            currentPosition --;
-         }
+         throw new InjectionException();
       }
+      injectionContext.proceed();
    }
 
-   public T getInjectionTarget()
-   {
-      return instance;
-   }
-
-   public Class<? super T> getInjectedType()
-   {
-      return clazz;
-   }
 }

@@ -20,57 +20,57 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.injection.manager.core;
+package com.jboss.injection.manager;
 
 import org.jboss.injection.manager.spi.InjectionContext;
 import org.jboss.injection.manager.spi.InjectionException;
 import org.jboss.injection.manager.spi.Injector;
 
-import java.util.LinkedList;
-import java.util.List;
-
 /**
-* @author Marius Bogoevici
-*/
-public class DefaultInjectionContext<T> implements InjectionContext<T>
+ * @author Marius Bogoevici
+ */
+public class RetryInjector implements Injector
 {
-   List<Injector> injectors;
-   private final T instance;
-   private Class<? super T> clazz;
-   private int currentPosition;
+   // this is not how one would normally do it, the recovery state must not be shared
+   // but this is just for testing
+   private int invocationCount;
 
-   public DefaultInjectionContext(T instance, Class<? super T> clazz, List<Injector> injectors)
+   private int maxInvocationCount = 0;
+
+   public RetryInjector(int maxInvocationCount)
    {
-      this.instance = instance;
-      this.clazz = clazz;
-      this.injectors = new LinkedList<Injector>(injectors);
-      this.currentPosition = 0;
+      this.maxInvocationCount = maxInvocationCount;
+      invocationCount = 0;
    }
 
-
-
-   public void proceed() throws InjectionException
+   public int getInvocationCount()
    {
-      if(currentPosition < injectors.size())
-      {
+      return invocationCount;
+   }
+
+   public int getMaxInvocationCount()
+   {
+      return maxInvocationCount;
+   }
+
+   public <T> void inject(InjectionContext<T> injectionContext) throws InjectionException
+   {
+      boolean canRecover = false;
+      do {
          try
          {
-            injectors.get(currentPosition++).inject(this);
+            injectionContext.proceed();
+            return;
          }
-         finally
+         catch (InjectionException e)
          {
-            currentPosition --;
+            canRecover = (++invocationCount < maxInvocationCount);
+            if (!canRecover)
+            {
+               throw e;
+            }
          }
       }
-   }
-
-   public T getInjectionTarget()
-   {
-      return instance;
-   }
-
-   public Class<? super T> getInjectedType()
-   {
-      return clazz;
+      while(canRecover);
    }
 }
