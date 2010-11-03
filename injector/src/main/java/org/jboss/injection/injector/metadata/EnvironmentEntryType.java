@@ -37,16 +37,7 @@ import java.util.Collection;
  */
 public interface EnvironmentEntryType
 {
-   /**
-    * The dependency that must be satisfied before a lookup on
-    * java:comp/env/<name> can actually succeed.
-    *
-    * Note: JBoss specific
-    *
-    * @return the dependency
-    */
-   Object getDependency();
-
+   
    /**
     * The name is a JNDI name relative to the java:comp/env
     * context. The name must be unique within a Deployment
