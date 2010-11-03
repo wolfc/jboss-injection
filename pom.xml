@@ -22,12 +22,7 @@
    <description>JBoss Injection Parent</description>
 
    <modules>
-      <module>injection</module>
       <module>injector</module>
-      <module>resolver-spi</module>
-      <module>resolver-impl</module>
-      <module>switchboard-metadata</module>
-      <module>switchboard-deployer</module>
       <module>injection-manager</module>
    </modules>
 
