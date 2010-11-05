@@ -47,11 +47,11 @@ public class EEInjector implements Injector
    private Context context;
    private JndiEnvironmentRefsGroup environment;
 
-   public EEInjector(Context context, JndiEnvironmentRefsGroup environment)
    /**
     * @param context the naming environment of an application component
     * @param environment the representation of the application component descriptor and annotations
     */
+   public EEInjector(Context context, JndiEnvironmentRefsGroup environment)
    {
       this.context = context;
       this.environment = environment;

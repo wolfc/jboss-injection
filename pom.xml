@@ -24,6 +24,7 @@
     <modules>
         <module>injector</module>
         <module>injection-manager</module>
+        <module>mc-impl</module>
     </modules>
 
     <!-- Dependency Versions -->
