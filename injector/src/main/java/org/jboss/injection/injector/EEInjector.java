@@ -119,13 +119,11 @@ public class EEInjector implements Injector
          for(EnvironmentEntryType entry : environment.getEntries())
          {
             String name = entry.getName();
-            Object value = null;
             for(InjectionTargetType target : entry.getInjectionTargets())
             {
                if(target.getInjectionTargetClass().isAssignableFrom(cls))
                {
-                  if(value == null)
-                     value = getContext().lookup(name);
+                  Object value = getContext().lookup(name);
                   inject(value, target.getInjectionTargetClass(), instance, target.getInjectionTargetName());
                }
             }
