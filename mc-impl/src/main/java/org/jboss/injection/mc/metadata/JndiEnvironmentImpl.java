@@ -92,6 +92,10 @@ public class JndiEnvironmentImpl implements JndiEnvironmentRefsGroup
     */
    public JndiEnvironmentImpl(Environment environment, ClassLoader classloader)
    {
+      if (environment == null)
+      {
+         throw new IllegalArgumentException("Cannot create " + this.getClass().getName() + " from a null " + Environment.class);
+      }
       this.delegate = environment;
       this.classLoader = classloader;
       // convert the JBMETA environment entries to jboss-injection
