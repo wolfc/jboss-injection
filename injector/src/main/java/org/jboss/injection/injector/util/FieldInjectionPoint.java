@@ -67,7 +67,7 @@ public class FieldInjectionPoint<T, V> extends AbstractAccessibleObjectBeanPrope
          boolean equalLoaders = (fieldLoader == null && valueLoader == null) ? true : fieldLoader.equals(valueLoader);
          if(!equalLoaders)
          {
-            msg = msg + "; Reason: ClassLoaders of value and target are not equal";
+            msg = msg + "; Reason: ClassLoaders of value: " + valueLoader + " and target field " + fieldLoader + " are not equal";
 
          }
          throw new IllegalArgumentException(msg);
