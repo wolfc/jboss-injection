@@ -45,6 +45,11 @@ public class InjectionPointFactory
       if(writeMethod != null)
          return new MethodInjectionPoint(writeMethod);
 
+      // TODO: this is a bug in JBMETA where we can get a property name as a method name
+      writeMethod = findWriteMethod(cls, property);
+      if(writeMethod != null)
+         return new MethodInjectionPoint(writeMethod);
+      
       try
       {
          Field field = cls.getDeclaredField(property);
