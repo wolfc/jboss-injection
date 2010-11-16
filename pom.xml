@@ -77,8 +77,8 @@
     </dependencyManagement>
 
     <scm>
-        <connection>scm:git:git://github.com/baileyje/jboss-injection.git</connection>
-        <developerConnection>scm:git:git@github.com:baileyje/jboss-injection.git</developerConnection>
-        <url>http://github.com/baileyje/jboss-injection</url>
+        <connection>scm:git:git://github.com/jaikiran/jboss-injection.git</connection>
+        <developerConnection>scm:git:git@github.com:jaikiran/jboss-injection.git</developerConnection>
+        <url>https://github.com/jaikiran/jboss-injection</url>
     </scm>
 </project>
