@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 
     <!-- Parent -->
@@ -15,7 +14,7 @@
     <!-- Artifact Information  -->
     <groupId>org.jboss.injection</groupId>
     <artifactId>jboss-injection-parent</artifactId>
-    <version>1.0.0-alpha-3-SNAPSHOT</version>
+    <version>1.0.0-alpha-3</version>
     <packaging>pom</packaging>
     <name>JBoss Injection Parent</name>
     <url>http://www.jboss.org</url>
