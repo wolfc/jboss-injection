@@ -62,7 +62,7 @@ public class FieldInjectionPoint<T, V> extends AbstractAccessibleObjectBeanPrope
          // Help out with the error message; let the developer know if the
          // value and target field CLs are not equal
          ClassLoader fieldLoader = field.getType().getClassLoader();
-         ClassLoader valueLoader = value.getClass().getClassLoader();
+         ClassLoader valueLoader = value == null ? null : value.getClass().getClassLoader();
          // Equal if both are null (some JDKs use this to represent Bootstrap CL), or they're equal - EJBTHREE-1694
          boolean equalLoaders = (fieldLoader == null && valueLoader == null) ? true : fieldLoader.equals(valueLoader);
          if(!equalLoaders)
