@@ -27,10 +27,11 @@ import org.jboss.deployers.spi.deployer.helpers.AbstractDeployer;
 import org.jboss.deployers.structure.spi.DeploymentUnit;
 import org.jboss.injection.manager.core.DefaultInjectionManager;
 import org.jboss.injection.manager.spi.InjectionManager;
+import org.jboss.logging.Logger;
 
 /**
  * {@link InjectionManagerDeployer} will attach a new {@link InjectionManager}
- * instance to each {@link DeploymentUnit} during the {@link DeploymentStages#POST_CLASSLOADER POST_CLASSLOADER}
+ * instance to each {@link DeploymentUnit} during the {@link DeploymentStages#REAL REAL}
  * stage.
  *
  * @author Jaikiran Pai
@@ -40,11 +41,21 @@ public class InjectionManagerDeployer extends AbstractDeployer
 {
 
    /**
+    * Logger
+    */
+   private static Logger logger = Logger.getLogger(InjectionManagerDeployer.class);
+   
+   /**
     * Setup the deployer
     */
    public InjectionManagerDeployer()
    {
-      this.setStage(DeploymentStages.POST_CLASSLOADER);
+      // we run in REAL stage because we want to process
+      // even component deployment unit (which are created during REAL stage)
+      this.setStage(DeploymentStages.REAL);
+      // we want to attach InjectionManager to both non-component and
+      // component deployment units
+      this.setWantComponents(true);
       // we attach InjectionManager
       this.addOutput(InjectionManager.class);
    }
@@ -56,7 +67,12 @@ public class InjectionManagerDeployer extends AbstractDeployer
    public void deploy(DeploymentUnit unit) throws DeploymentException
    {
       // create and attach a new InjectionManager for the unit
-      unit.addAttachment(InjectionManager.class, new DefaultInjectionManager());
+      InjectionManager injectionManager = new DefaultInjectionManager();
+      unit.addAttachment(InjectionManager.class, injectionManager);
+      if (logger.isTraceEnabled())
+      {
+         logger.trace("Added InjectionManager: " + injectionManager + " to unit " + unit);
+      }
    }
    
 }
