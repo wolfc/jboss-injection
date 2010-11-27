@@ -21,6 +21,17 @@
  */
 package org.jboss.injection.injector.test.wicked;
 
+import static java.util.Arrays.asList;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.lang.reflect.Proxy;
+import java.util.Collection;
+
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+
 import org.jboss.ejb3.sis.Interceptor;
 import org.jboss.ejb3.sis.InterceptorAssembly;
 import org.jboss.ejb3.sis.reflect.InterceptorInvocationHandler;
@@ -37,17 +48,6 @@ import org.jnp.server.SingletonNamingServer;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import java.lang.reflect.Proxy;
-import java.util.Collection;
-
-import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * Just to ease my mind I want to make sure a SLSB with an Interceptor
@@ -103,20 +103,18 @@ public class WickedTestCase
       Util.rebind(iniCtx, "java:comp/env/wicked", "Wicked");
       Util.rebind(iniCtx, "java:comp/env/" + ValueStatelessBean.class.getName() + "/value", "Bean");
 
-      Context context = (Context) iniCtx.lookup("java:comp/env");
-
       JndiEnvironmentRefsGroup environment = mock(JndiEnvironmentRefsGroup.class);
 
-      EnvironmentEntryType entry = entry("wicked", asList(injectionTarget(AbstractWicked.class, "value")));
+      EnvironmentEntryType entry = entry("env/wicked", asList(injectionTarget(AbstractWicked.class, "value")));
 
       // EE.5.2.5 defines the default name of a resource
-      EnvironmentEntryType entry2 = entry(ValueStatelessBean.class.getName() + "/value",
+      EnvironmentEntryType entry2 = entry("env/" + ValueStatelessBean.class.getName() + "/value",
               asList(injectionTarget(ValueStatelessBean.class, "value")));
       
       Collection<EnvironmentEntryType> entries = asList(entry, entry2);
       when(environment.getEntries()).thenReturn(entries);
 
-      Injector injector = new EEInjector(context, environment);
+      Injector injector = new EEInjector(environment);
 
       InjectionManager injectionManager = new DefaultInjectionManager();
       injectionManager.addInjector(injector);

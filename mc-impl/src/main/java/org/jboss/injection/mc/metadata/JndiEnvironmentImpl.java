@@ -30,6 +30,7 @@ import org.jboss.injection.injector.metadata.InjectionTargetType;
 import org.jboss.injection.injector.metadata.JndiEnvironmentRefsGroup;
 import org.jboss.injection.injector.metadata.impl.EnvironmentEntryImpl;
 import org.jboss.injection.injector.metadata.impl.InjectionTarget;
+import org.jboss.injection.injector.util.EnvironmentEntryUtil;
 import org.jboss.metadata.javaee.spec.AnnotatedEJBReferenceMetaData;
 import org.jboss.metadata.javaee.spec.AnnotatedEJBReferencesMetaData;
 import org.jboss.metadata.javaee.spec.EJBLocalReferenceMetaData;
@@ -53,6 +54,7 @@ import org.jboss.metadata.javaee.spec.ResourceReferencesMetaData;
 import org.jboss.metadata.javaee.spec.ServiceReferenceMetaData;
 import org.jboss.metadata.javaee.spec.ServiceReferencesMetaData;
 
+
 /**
  * A implementation of {@link JndiEnvironmentRefsGroup}, which works off 
  * JBMETA based {@link Environment}
@@ -63,11 +65,6 @@ import org.jboss.metadata.javaee.spec.ServiceReferencesMetaData;
 public class JndiEnvironmentImpl implements JndiEnvironmentRefsGroup
 {
 
-   /**
-    * The prefix to be used for java:comp reference entries 
-    */
-   private static final String PREFIX_ENV = "env/";
-   
    /**
     * JBMETA based delegate metadata
     */
@@ -127,10 +124,22 @@ public class JndiEnvironmentImpl implements JndiEnvironmentRefsGroup
       {
          for (EnvironmentEntryMetaData envEntry : envEntries)
          {
-            Collection<InjectionTargetType> injectionTargets = this.convertInjectionTargets(envEntry.getInjectionTargets());
-            if (!injectionTargets.isEmpty())
+            // According to Java EE6 Spec, section EE.5.4.1.3,
+            // The container must only inject a value for this resource if the deployer has specified a 
+            // value to override the default value. The env-entry-value element in the deployment descriptor 
+            // is optional when an injection target is specified. If the element is *not* specified, no value 
+            // will be injected. In addition, if the element is not specified, the named resource is not 
+            // initialized in the naming context; explicit lookups of the named resource will fail.
+            
+            // so create an EnvironmentEntryImpl only if env-entry-value or a lookup-name is specified
+            if (envEntry.getValue() != null || envEntry.getLookupName() != null)
             {
-               this.envEntries.add(new EnvironmentEntryImpl(PREFIX_ENV + envEntry.getName(), injectionTargets));
+               Collection<InjectionTargetType> injectionTargets = this.convertInjectionTargets(envEntry.getInjectionTargets());
+               if (!injectionTargets.isEmpty())
+               {
+                  String encName = EnvironmentEntryUtil.getENCName(envEntry.getName());
+                  this.envEntries.add(new EnvironmentEntryImpl(encName, injectionTargets));
+               }
             }
          }
       }
@@ -144,7 +153,8 @@ public class JndiEnvironmentImpl implements JndiEnvironmentRefsGroup
             Collection<InjectionTargetType> injectionTargets = this.convertInjectionTargets(annotatedEjbRef.getInjectionTargets());
             if (!injectionTargets.isEmpty())
             {
-               this.envEntries.add(new EnvironmentEntryImpl(PREFIX_ENV + annotatedEjbRef.getName(), injectionTargets));
+               String encName = EnvironmentEntryUtil.getENCName(annotatedEjbRef.getName());
+               this.envEntries.add(new EnvironmentEntryImpl(encName, injectionTargets));
             }
          }
       }
@@ -158,7 +168,8 @@ public class JndiEnvironmentImpl implements JndiEnvironmentRefsGroup
             Collection<InjectionTargetType> injectionTargets = this.convertInjectionTargets(ejbLocalRef.getInjectionTargets());
             if (!injectionTargets.isEmpty())
             {
-               this.envEntries.add(new EnvironmentEntryImpl(PREFIX_ENV + ejbLocalRef.getName(), injectionTargets));
+               String encName = EnvironmentEntryUtil.getENCName(ejbLocalRef.getName());
+               this.envEntries.add(new EnvironmentEntryImpl(encName, injectionTargets));
             }
          }
       }
@@ -172,7 +183,8 @@ public class JndiEnvironmentImpl implements JndiEnvironmentRefsGroup
             Collection<InjectionTargetType> injectionTargets = this.convertInjectionTargets(ejbRef.getInjectionTargets());
             if (!injectionTargets.isEmpty())
             {
-               this.envEntries.add(new EnvironmentEntryImpl(PREFIX_ENV + ejbRef.getName(), injectionTargets));
+               String encName = EnvironmentEntryUtil.getENCName(ejbRef.getName());
+               this.envEntries.add(new EnvironmentEntryImpl(encName, injectionTargets));
             }
          }
       }
@@ -186,7 +198,8 @@ public class JndiEnvironmentImpl implements JndiEnvironmentRefsGroup
             Collection<InjectionTargetType> injectionTargets = this.convertInjectionTargets(persistenceUnitRef.getInjectionTargets());
             if (!injectionTargets.isEmpty())
             {
-               this.envEntries.add(new EnvironmentEntryImpl(PREFIX_ENV + persistenceUnitRef.getName(), injectionTargets));
+               String encName = EnvironmentEntryUtil.getENCName(persistenceUnitRef.getName());
+               this.envEntries.add(new EnvironmentEntryImpl(encName, injectionTargets));
             }
          }
       }
@@ -200,7 +213,8 @@ public class JndiEnvironmentImpl implements JndiEnvironmentRefsGroup
             Collection<InjectionTargetType> injectionTargets = this.convertInjectionTargets(persistenceCtxRef.getInjectionTargets());
             if (!injectionTargets.isEmpty())
             {
-               this.envEntries.add(new EnvironmentEntryImpl(PREFIX_ENV + persistenceCtxRef.getName(), injectionTargets));
+               String encName = EnvironmentEntryUtil.getENCName(persistenceCtxRef.getName());
+               this.envEntries.add(new EnvironmentEntryImpl(encName, injectionTargets));
             }
          }
       }
@@ -214,7 +228,8 @@ public class JndiEnvironmentImpl implements JndiEnvironmentRefsGroup
             Collection<InjectionTargetType> injectionTargets = this.convertInjectionTargets(resourceEnvRef.getInjectionTargets());
             if (!injectionTargets.isEmpty())
             {
-               this.envEntries.add(new EnvironmentEntryImpl(PREFIX_ENV + resourceEnvRef.getName(), injectionTargets));
+               String encName = EnvironmentEntryUtil.getENCName(resourceEnvRef.getName());
+               this.envEntries.add(new EnvironmentEntryImpl(encName, injectionTargets));
             }
          }
       }
@@ -228,7 +243,8 @@ public class JndiEnvironmentImpl implements JndiEnvironmentRefsGroup
             Collection<InjectionTargetType> injectionTargets = this.convertInjectionTargets(resourceRef.getInjectionTargets());
             if (!injectionTargets.isEmpty())
             {
-               this.envEntries.add(new EnvironmentEntryImpl(PREFIX_ENV + resourceRef.getName(), injectionTargets));
+               String encName = EnvironmentEntryUtil.getENCName(resourceRef.getName());
+               this.envEntries.add(new EnvironmentEntryImpl(encName, injectionTargets));
             }
          }
       }
@@ -242,7 +258,8 @@ public class JndiEnvironmentImpl implements JndiEnvironmentRefsGroup
             Collection<InjectionTargetType> injectionTargets = this.convertInjectionTargets(messageDestRef.getInjectionTargets());
             if (!injectionTargets.isEmpty())
             {
-               this.envEntries.add(new EnvironmentEntryImpl(PREFIX_ENV + messageDestRef.getName(), injectionTargets));
+               String encName = EnvironmentEntryUtil.getENCName(messageDestRef.getName());
+               this.envEntries.add(new EnvironmentEntryImpl(encName, injectionTargets));
             }
          }
       }
@@ -256,7 +273,8 @@ public class JndiEnvironmentImpl implements JndiEnvironmentRefsGroup
             Collection<InjectionTargetType> injectionTargets = this.convertInjectionTargets(serviceRef.getInjectionTargets());
             if (!injectionTargets.isEmpty())
             {
-               this.envEntries.add(new EnvironmentEntryImpl(PREFIX_ENV + serviceRef.getName(), injectionTargets));
+               String encName = EnvironmentEntryUtil.getENCName(serviceRef.getName());
+               this.envEntries.add(new EnvironmentEntryImpl(encName, injectionTargets));
             }
          }
       }

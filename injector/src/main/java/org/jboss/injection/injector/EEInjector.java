@@ -21,6 +21,10 @@
  */
 package org.jboss.injection.injector;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+
 import org.jboss.injection.injector.metadata.EnvironmentEntryType;
 import org.jboss.injection.injector.metadata.InjectionTargetType;
 import org.jboss.injection.injector.metadata.JndiEnvironmentRefsGroup;
@@ -30,9 +34,7 @@ import org.jboss.injection.injector.util.NoSuchPropertyException;
 import org.jboss.injection.manager.spi.InjectionContext;
 import org.jboss.injection.manager.spi.InjectionException;
 import org.jboss.injection.manager.spi.Injector;
-
-import javax.naming.Context;
-import javax.naming.NamingException;
+import org.jboss.logging.Logger;
 
 /**
  * Inject entries from the naming environment into the application component,
@@ -44,26 +46,29 @@ import javax.naming.NamingException;
  */
 public class EEInjector implements Injector
 {
-   private Context context;
+   private static Logger logger = Logger.getLogger(EEInjector.class);
+   
    private JndiEnvironmentRefsGroup environment;
+   
+   private Context context;
 
    /**
-    * @param context the naming environment of an application component
+    *  
     * @param environment the representation of the application component descriptor and annotations
     */
-   public EEInjector(Context context, JndiEnvironmentRefsGroup environment)
+   public EEInjector(JndiEnvironmentRefsGroup environment)
    {
-      this.context = context;
       this.environment = environment;
+      try
+      {
+         this.context = new InitialContext();
+      }
+      catch (NamingException ne)
+      {
+         throw new RuntimeException(ne);
+      }
    }
 
-   /**
-    * @return the context from which injection takes place
-    */
-   protected Context getContext()
-   {
-      return context;
-   }
 
    protected JndiEnvironmentRefsGroup getEnvironment()
    {
@@ -123,7 +128,9 @@ public class EEInjector implements Injector
             {
                if(target.getInjectionTargetClass().isAssignableFrom(cls))
                {
-                  Object value = getContext().lookup(name);
+                  logger.debug("Looking up " + name + " for injecting into targetclass "
+                        + target.getInjectionTargetClass() + " targetname " + target.getInjectionTargetName());
+                  Object value = this.lookup(name);
                   inject(value, target.getInjectionTargetClass(), instance, target.getInjectionTargetName());
                }
             }
@@ -136,6 +143,16 @@ public class EEInjector implements Injector
       }
    }
 
+   private Object lookup(String jndiName) throws NamingException
+   {
+      if (jndiName.startsWith("java:comp/") || jndiName.startsWith("java:module/") || jndiName.startsWith("java:app/")
+            || jndiName.startsWith("java:global/"))
+      {
+         return this.context.lookup(jndiName);
+      }
+      return this.context.lookup("java:comp/" + jndiName);
+   }
+   
    private void inject(Object value, Class<?> cls, Object instance, String name) throws NoSuchPropertyException
    {
       InjectionPoint p = InjectionPointFactory.create(cls, name);

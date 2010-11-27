@@ -30,6 +30,7 @@
     <properties>
         <version.jboss.common.core>2.2.17.GA</version.jboss.common.core>
         <version.jboss.reloaded.naming>0.2.0</version.jboss.reloaded.naming>
+        <version.jboss.logging>3.0.0.Beta4</version.jboss.logging>
     </properties>
 
     <build>
@@ -46,6 +47,13 @@
 
     <dependencyManagement>
         <dependencies>
+            
+            <dependency>
+                <groupId>org.jboss.logging</groupId>
+                <artifactId>jboss-logging</artifactId>
+                <version>${version.jboss.logging}</version>
+            </dependency>
+        
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
