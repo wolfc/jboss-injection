@@ -34,40 +34,107 @@ public class InjectionPointFactory
    static String capitalize(String name)
    {
       if (name == null || name.length() == 0)
+      {
          return name;
+      }
       return name.substring(0, 1).toUpperCase(ENGLISH) + name.substring(1);
    }
 
-   public static InjectionPoint create(Class<?> cls, String property) throws NoSuchPropertyException
+   public static InjectionPoint create(Class<?> targetClass, String property, Class<?> paramType) throws NoSuchPropertyException
    {
       String writeMethodName = "set" + capitalize(property);
-      Method writeMethod = findWriteMethod(cls, writeMethodName);
-      if(writeMethod != null)
+      Method writeMethod = findWriteMethod(targetClass, writeMethodName, paramType);
+      if (writeMethod != null)
+      {
          return new MethodInjectionPoint(writeMethod);
+      }
 
       // TODO: this is a bug in JBMETA where we can get a property name as a method name
-      writeMethod = findWriteMethod(cls, property);
-      if(writeMethod != null)
+      writeMethod = findWriteMethod(targetClass, property, paramType);
+      if (writeMethod != null)
+      {
          return new MethodInjectionPoint(writeMethod);
-      
+      }
+
       try
       {
-         Field field = cls.getDeclaredField(property);
+         Field field = targetClass.getDeclaredField(property);
          return new FieldInjectionPoint(field);
       }
-      catch(NoSuchFieldException e)
+      catch (NoSuchFieldException e)
       {
-         throw new NoSuchPropertyException("No such property " + property + " on " + cls, e);
+         throw new NoSuchPropertyException("No such property " + property + " on " + targetClass, e);
       }
    }
 
-   private static Method findWriteMethod(Class<?> cls, String methodName)
+   private static Method findWriteMethod(Class<?> cls, String methodName, Class<?> paramType)
    {
-      for(Method m : cls.getDeclaredMethods())
+      for (Method m : cls.getDeclaredMethods())
       {
-         if(m.getName().equals(methodName))
-            return m;
+         // Find a method which has the same name as the passed methodName and which takes one parameter
+         // of the expected type and with a void return type
+         if (m.getName().equals(methodName) && m.getReturnType() == Void.TYPE && m.getParameterTypes().length == 1)
+         {
+            // Consider the current method as a match, because the expected param type isn't specified
+            if (paramType == null)
+            {
+               return m;
+            }
+            // check param type
+            Class<?>[] paramTypes = m.getParameterTypes();
+            if (paramTypes[0].isAssignableFrom(paramType))
+            {
+               return m;
+            }
+            // Check if auto-boxing is applicable for the expected and actual param types
+            if (paramType.isPrimitive() && isCompatibleForBoxedType(paramType, paramTypes[0]))
+            {
+               return m;
+            }
+            if (paramTypes[0].isPrimitive() && isCompatibleForBoxedType(paramTypes[0], paramType))
+            {
+               return m;
+            }
+         }
       }
       return null;
+   }
+
+   private static boolean isCompatibleForBoxedType(Class<?> primitiveType, Class<?> wrapperType)
+   {
+      if (primitiveType.equals(Integer.TYPE))
+      {
+         return wrapperType.equals(Integer.class);
+      }
+      if (primitiveType.equals(Float.TYPE))
+      {
+         return wrapperType.equals(Float.class);
+      }
+      if (primitiveType.equals(Double.TYPE))
+      {
+         return wrapperType.equals(Double.class);
+      }
+      if (primitiveType.equals(Byte.TYPE))
+      {
+         return wrapperType.equals(Byte.class);
+      }
+      if (primitiveType.equals(Character.TYPE))
+      {
+         return wrapperType.equals(Character.class);
+      }
+      if (primitiveType.equals(Boolean.TYPE))
+      {
+         return wrapperType.equals(Boolean.class);
+      }
+      if (primitiveType.equals(Long.TYPE))
+      {
+         return wrapperType.equals(Long.class);
+      }
+      if (primitiveType.equals(Short.TYPE))
+      {
+         return wrapperType.equals(Short.class);
+      }
+
+      return false;
    }
 }
