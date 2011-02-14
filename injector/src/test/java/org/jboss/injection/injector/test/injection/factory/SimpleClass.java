@@ -58,4 +58,9 @@ public class SimpleClass
    {
       // do nothing
    }
+
+   public void em()
+   {
+      // do nothing
+   }
 }

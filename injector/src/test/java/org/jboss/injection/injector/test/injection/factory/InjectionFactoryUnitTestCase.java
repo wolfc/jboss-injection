@@ -30,13 +30,21 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
+ * Tests {@link InjectionPointFactory}
+ * <p/>
  * Author : Jaikiran Pai
  */
 public class InjectionFactoryUnitTestCase
 {
 
+   /**
+    * Test that the {@link InjectionPointFactory#create(Class, String, Class)} finds the correct
+    * injection point
+    *
+    * @throws Exception
+    */
    @Test
-   public void testFindCorrectSetter() throws Exception
+   public void testFindCorrectInjectionPoint() throws Exception
    {
       String stringValue = "someStringValue";
       InjectionPoint injectionPoint = InjectionPointFactory.create(SimpleClass.class, "something", stringValue.getClass());

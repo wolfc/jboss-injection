@@ -40,6 +40,16 @@ public class InjectionPointFactory
       return name.substring(0, 1).toUpperCase(ENGLISH) + name.substring(1);
    }
 
+   /**
+    * Creates and return the correct {@link InjectionPoint} for the specified target class
+    * and property. The <code>paramType</code> specifies the param type of the injection point.
+    *
+    * @param targetClass The class in which the injection point will be looked for
+    * @param property    The property name which will be used to find the correct method or field for injection
+    * @param paramType   The type of the field/method param which is being injected
+    * @return
+    * @throws NoSuchPropertyException If no injection point can be found for the passed property
+    */
    public static InjectionPoint create(Class<?> targetClass, String property, Class<?> paramType) throws NoSuchPropertyException
    {
       String writeMethodName = "set" + capitalize(property);
@@ -67,6 +77,14 @@ public class InjectionPointFactory
       }
    }
 
+   /**
+    * Finds and returns the correct setter method. If no method is found, then returns null.
+    *
+    * @param cls
+    * @param methodName
+    * @param paramType
+    * @return
+    */
    private static Method findWriteMethod(Class<?> cls, String methodName, Class<?> paramType)
    {
       for (Method m : cls.getDeclaredMethods())
@@ -100,6 +118,14 @@ public class InjectionPointFactory
       return null;
    }
 
+   /**
+    * Returns true if the passed <code>wrapperType</code> is a wrapper class for the <code>primitiveType</code>
+    * (ex: java.lang.Integer for the primitive type int). Else returns false.
+    *
+    * @param primitiveType
+    * @param wrapperType
+    * @return
+    */
    private static boolean isCompatibleForBoxedType(Class<?> primitiveType, Class<?> wrapperType)
    {
       if (primitiveType.equals(Integer.TYPE))
