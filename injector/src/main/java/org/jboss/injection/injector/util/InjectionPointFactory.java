@@ -68,6 +68,10 @@ public class InjectionPointFactory
          if(m.getName().equals(methodName))
             return m;
       }
+      // recurse through class hierarchy if not found
+      if(cls.getSuperclass() != null) {
+         return findWriteMethod(cls.getSuperclass(),methodName);
+      }
       return null;
    }
 }
