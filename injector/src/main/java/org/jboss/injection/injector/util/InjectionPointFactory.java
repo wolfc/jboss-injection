@@ -115,6 +115,10 @@ public class InjectionPointFactory
             }
          }
       }
+      // if the method isn't found recurse upward
+      if(cls.getSuperclass() != null) {
+         return findWriteMethod(cls.getSuperclass(), methodName, paramType);
+      }
       return null;
    }
 
