@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <!-- Parent -->
     <parent>
         <groupId>org.jboss.injection</groupId>
         <artifactId>jboss-injection-parent</artifactId>
-        <version>1.0.0-alpha-3-SNAPSHOT</version>
+        <version>1.0.0-alpha-8-SNAPSHOT</version>
     </parent>
 
     <!-- Model Information -->
@@ -24,7 +23,7 @@
         <version.org.jboss.kernel>2.2.0.Alpha2</version.org.jboss.kernel>
         <version.reloaded.naming>0.2.0</version.reloaded.naming>
         <version.jboss.switchboard>1.0.0-alpha-6</version.jboss.switchboard>
-        <version.jboss.metadata.ejb>2.0.0-alpha-18</version.jboss.metadata.ejb>
+        <version.jboss.metadata.common>2.0.0.Alpha22</version.jboss.metadata.common>
         <version.jboss.metadata.war>2.0.0.Alpha14</version.jboss.metadata.war>
     </properties>
 
@@ -85,11 +84,19 @@
             <scope>provided</scope>
         </dependency>
 
+        <!--  JBMETA metadata -->
         <dependency>
             <groupId>org.jboss.metadata</groupId>
             <artifactId>jboss-metadata-war</artifactId>
             <version>${version.jboss.metadata.war}</version>
         </dependency>
+        
+        <dependency>
+            <groupId>org.jboss.metadata</groupId>
+            <artifactId>jboss-metadata-common</artifactId>
+            <version>${version.jboss.metadata.common}</version>
+        </dependency>
+        
 
 
         <!-- Test dependencies -->

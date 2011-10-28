@@ -21,6 +21,16 @@
  */
 package org.jboss.injection.injector.test.coverage;
 
+import static java.util.Arrays.asList;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.util.Collection;
+
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+
 import org.jboss.injection.injector.EEInjector;
 import org.jboss.injection.injector.metadata.EnvironmentEntryType;
 import org.jboss.injection.injector.metadata.InjectionTargetType;
@@ -31,16 +41,6 @@ import org.jnp.server.SingletonNamingServer;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import java.util.Collection;
-
-import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * @author <a href="mailto:cdewolf@redhat.com">Carlo de Wolf</a>
@@ -79,7 +79,6 @@ public class CoverageTestCase
    {
       Util.rebind(iniCtx, "java:comp/env/message", "Hi");
 
-      Context context = (Context) iniCtx.lookup("java:comp/env");
 
       JndiEnvironmentRefsGroup environment = mock(JndiEnvironmentRefsGroup.class);
 
@@ -90,13 +89,13 @@ public class CoverageTestCase
       Collection<InjectionTargetType> injectionTargets = asList(injectionTarget);
       
       EnvironmentEntryType entry = mock(EnvironmentEntryType.class);
-      when(entry.getName()).thenReturn("message");
+      when(entry.getName()).thenReturn("env/message");
       when(entry.getInjectionTargets()).thenReturn(injectionTargets);
       
       Collection<EnvironmentEntryType> entries = asList(entry);
       when(environment.getEntries()).thenReturn(entries);
 
-      EEInjector injector = new EEInjector(context, environment);
+      EEInjector injector = new EEInjector(environment);
 
       GreeterBean instance = new GreeterBean();
 

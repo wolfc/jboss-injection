@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 
     <!-- Parent -->
@@ -15,7 +14,7 @@
     <!-- Artifact Information  -->
     <groupId>org.jboss.injection</groupId>
     <artifactId>jboss-injection-parent</artifactId>
-    <version>1.0.0-alpha-3-SNAPSHOT</version>
+    <version>1.0.0-alpha-8-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>JBoss Injection Parent</name>
     <url>http://www.jboss.org</url>
@@ -31,6 +30,7 @@
     <properties>
         <version.jboss.common.core>2.2.17.GA</version.jboss.common.core>
         <version.jboss.reloaded.naming>0.2.0</version.jboss.reloaded.naming>
+        <version.jboss.logging>3.0.0.Beta4</version.jboss.logging>
     </properties>
 
     <build>
@@ -47,6 +47,13 @@
 
     <dependencyManagement>
         <dependencies>
+            
+            <dependency>
+                <groupId>org.jboss.logging</groupId>
+                <artifactId>jboss-logging</artifactId>
+                <version>${version.jboss.logging}</version>
+            </dependency>
+        
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
@@ -77,8 +84,8 @@
     </dependencyManagement>
 
     <scm>
-        <connection>scm:git:git://github.com/baileyje/jboss-injection.git</connection>
-        <developerConnection>scm:git:git@github.com:baileyje/jboss-injection.git</developerConnection>
-        <url>http://github.com/baileyje/jboss-injection</url>
+        <connection>scm:git:git://github.com/jaikiran/jboss-injection.git</connection>
+        <developerConnection>scm:git:git@github.com:jaikiran/jboss-injection.git</developerConnection>
+        <url>https://github.com/jaikiran/jboss-injection</url>
     </scm>
 </project>
